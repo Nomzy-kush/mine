@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Video Player
+  </title>
+  <link href="https://cdn.plyr.io/3.4.6/plyr.css" rel="stylesheet"/>
+  <link href="{% static 'style.css' %}" rel="stylesheet"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  </meta>
+ </head>
+ <style>
+  body {
+background-color: #b2beb5
+}
+ </style>
+ <body>
+  <!-- partial:index.partial.html -->
+  <div class="container">
+    <center><h2>{{object.title}}</h2></center>
+   <video controls="" crossorigin="" id="player" playsinline="" poster="{{object.image.url}}">
+    <!-- Video files -->
+    <source size="576" src="{% if object.link %}{{object.link}}{% else %}{{object.file.url}}{% endif %}" type="video/mp4"/>
+    <source size="720" src="{% if object.link %}{{object.link}}{% else %}{{object.file.url}}{% endif %}" type="video/mp4"/>
+    <source size="1080" src="{% if object.link %}{{object.link}}{% else %}{{object.file.url}}{% endif %}" type="video/mp4"/>
+    <source size="1440" src="{% if object.link %}{{object.link}}{% else %}{{object.file.url}}{% endif %}" type="video/mp4"/>
+    <!-- Caption files -->
+    <!-- Fallback for browsers that don't support the <video> element -->
+    {% if object.link %}
+    <a download="" href="{{object.link}}">
+     Download
+    </a>
+    {% else %}
+    <a download="" href="{{object.file.url}}">
+     Download
+    </a>
+    {% endif %}
+   </video>
+   <div class="actions">
+    <button class="btn js-play" type="button">
+     Play
+    </button>
+    <button class="btn js-pause" type="button">
+     Pause
+    </button>
+    <button class="btn js-stop" type="button">
+     Stop
+    </button>
+    <button class="btn js-rewind" type="button">
+     Rewind
+    </button>
+    <button class="btn js-forward" type="button">
+     Forward
+    </button>
+    <a href="{% url 'App:videos' %}"><button class="btn js-forward" type="button">
+     Return to Videos
+   </button></a>
+   </div>
+  </div>
+  <!-- partial -->
+  <script src="https://cdn.plyr.io/3.4.6/plyr.js">
+  </script>
+  <script src="{% static 'script.js' %}">
+  </script>
+ </body>
+</html>

@@ -1,0 +1,87 @@
+{% load static %}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<style>
+ body {
+background-color: #b2beb5
+}
+</style>
+<div class="container">
+        <div class="row justify-content-center align-items-center" style="height:100vh">
+            <div class="col-4">
+                <div class="card">
+                  <center><h2>Setup TypingDNA 2FA on your Video Player</h2></center>
+                  <br>
+                    <div class="card-body">
+      {% if messages %}
+      {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+            {{ message }}
+            </div>
+      {% endfor %}
+      {% endif %}
+                      <div id="failed-auth" class="alert alert-danger" role="alert" style="display: none">
+                          <strong>You have not completed your authentication, please type the text above</strong>
+                      </div>
+
+                        <form method="POST">
+                          {% csrf_token %}
+                            <div class="form-group">
+                              <p class="mb-0" style="color:red;"><strong>"I am authenticated by the way I type"</strong></p>
+                              <br>
+                                <input type="text" class="form-control disable-autocomplete" id="auth-text" name="type" placeholder="enter text seen above">
+                            </div>
+                            <input type="hidden" id="tp" name="tp">
+                            <button class="btn btn-primary" type="button" class="btn btn-success" onclick="startAuthentication()">Start Authentication</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'typingdna.js' %}">
+    </script>
+    <script src="{% static 'autocomplete-disabler.js' %}">
+    </script>
+    <script src="{% static 'typing-visualizer.js' %}">
+    </script>
+    <script>
+  var tdna = new TypingDNA();
+  var autocompleteDisabler = new AutocompleteDisabler({
+    showTypingVisualizer: true,
+    showTDNALogo: true
+  });
+  var typingPatterns = [];
+
+  function startAuthentication() {
+    document.getElementById("failed-auth").style.display = "none";
+    document.getElementById("auth-text").value = "";
+    TypingDNA.stop();
+
+    let typingPattern = tdna.getTypingPattern({
+      type: 1,
+      text: "I am authenticated by the way I type"
+    });
+
+    if (typingPattern == null) {
+      document.getElementById("failed-auth").style.display = "block";
+    } else {
+      typingPatterns.push(typingPattern);
+
+      if (typingPatterns.length == 3) {
+        let tp = typingPatterns[0] + ";" + typingPatterns[1] + ";" + typingPatterns[2];
+        document.getElementById("tp").value = tp;
+        document.forms[0].submit();
+      } else {
+        alert("Successfully logged typing pattern, please type the text again to improve accuracy");
+      }
+    }
+
+    TypingDNA.reset();
+    TypingDNA.start();
+  }
+</script>

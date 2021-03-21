@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Video Player
+  </title>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  </meta>
+  <link href="https://cdn.plyr.io/3.4.6/plyr.css" rel="stylesheet"/>
+  <link href="{% static 'style.css' %}" rel="stylesheet"/>
+  <link rel="stylesheet" href=
+  "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity=
+  "sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+      <link rel="stylesheet" href=
+  "https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity=
+  "sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+          crossorigin="anonymous">
+ </head>
+ <style>
+  body {
+background-color: #b2beb5
+}
+ </style>
+ <body>
+   <center><h1 style="color:white;">My Videos</h1></center>
+   <br>
+   <div class="container">
+        <div class="row">
+          {% if page_obj %}
+          {% for item in page_obj %}
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <a href="{{item.get_absolute_url}}"><img class="card-img-top" src="{{item.image.url}}" alt=""></a>
+                    <div class="card-body">
+                        <a href="{{item.get_absolute_url}}"><h5 class="card-title">{{item.title}}</h5></a>
+                        <p class="card-text">
+                            {{item.summary}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <center>
+            <h2>No videos available </h2>
+          </center>
+            {% endif %}
+            <center>
+              <nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item disabled">
+      <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}" tabindex="-1">Previous</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }} {% endif %}">Next</a>
+    </li>
+  </ul>
+</nav>
+            </center>
+        </div>
+    </div>
+  <!-- partial:index.partial.html -->
+  <!-- partial -->
+  <script src="https://cdn.plyr.io/3.4.6/plyr.js">
+  </script>
+  <script src="{% static 'script.js' %}">
+  </script>
+ </body>
+</html>
